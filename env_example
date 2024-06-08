@@ -1,0 +1,9 @@
+PORT = 3000
+CLIENT_ID = "85736281926-zdgj3jc7gbq2gaq1lu94gf2nihyt2hfu.apps.googleusercontent.com"
+CLIENT_SECRET = "MASKMNCLNKASD0-ASDMKLM"
+REDIRECT_URL = "http://localhost"
+DB_NAME=mydb
+DB_USER=myuser
+DB_PASS=mypassword
+DB_PORT=5432
+DB_HOST=localhost

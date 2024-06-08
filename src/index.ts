@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
+import sequelize from "./database.js";
 import { userRoute } from "./routes/User.js";
 
 // Load .env vars
@@ -28,6 +29,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Setup for SESSION variables
+// TODO: Make this secure
 app.use(
   session({
     secret: process.env.CLIENT_SECRET,
@@ -39,6 +41,14 @@ app.use(
     },
   })
 );
+
+//DB initialization
+try {
+  await sequelize.authenticate();
+  console.log("Database is online");
+} catch (err) {
+  throw new Error(err);
+}
 
 // Adding routes
 app.use("/users", userRoute);
