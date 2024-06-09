@@ -2,9 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
-import sequelize from "./database.js";
 import { userRoute } from "./routes/User.js";
+import { initDB } from "./database.js";
 
+// TODO: Documentar en README.md
+// TODO: Hacer que los endpoints no exploten a la minima
 // Load .env vars
 dotenv.config();
 
@@ -43,12 +45,7 @@ app.use(
 );
 
 //DB initialization
-try {
-  await sequelize.authenticate();
-  console.log("Database is online");
-} catch (err) {
-  throw new Error(err);
-}
+initDB();
 
 // Adding routes
 app.use("/users", userRoute);
