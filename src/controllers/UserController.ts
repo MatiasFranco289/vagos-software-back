@@ -1,13 +1,16 @@
 import { Request, Response } from "express";
 import { google } from "googleapis";
 import dotenv from "dotenv";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { Jwt, JwtPayload } from "jsonwebtoken";
 import { User } from "../models/Users.js";
 import { UserStatus } from "../models/UserStatus.js";
 import { UserScopes } from "../models/UserScopes.js";
-import { UserCredentials, ScopeNames, StatusNames } from "../constants.js";
-
-// TODO: Deberias implementar una interfaz unificada para las respuestas
+import {
+  UserCredentials,
+  ScopeNames,
+  StatusNames,
+  ApiResponse,
+} from "../constants.js";
 
 // Load .env vars
 dotenv.config();
@@ -19,7 +22,7 @@ const oauth2Client = new google.auth.OAuth2({
   redirectUri: process.env.REDIRECT_URL,
 });
 
-function decode(myJwt: string) {
+function decode(myJwt: string): string | JwtPayload {
   let decoded: JwtPayload | string;
 
   try {
@@ -37,34 +40,61 @@ function decode(myJwt: string) {
 
 export const userController = {
   // TODO: This endpoint should enumerate all user endpoints
-  get: (req: Request, res: Response) => {
-    res.send("This is the users endpoint.");
+  get: (req: Request, res: Response<ApiResponse<null>>) => {
+    let statusCode: number = 200;
+    let response: ApiResponse<null> = {
+      code: statusCode,
+      message: "Hi user!",
+      data: [],
+    };
+
+    res.status(statusCode).json(response);
   },
 
-  get_login: async (req, res) => {
+  get_login: async (req: Request, res: Response<ApiResponse<null>>) => {
     let statusCode: number = 200;
+    let response: ApiResponse<null>;
 
     // If already have a active session
     if (req.session.credentials) {
       statusCode = 409;
-      return res.status(statusCode).send("The user is already connected.");
+      response = {
+        code: statusCode,
+        message:
+          "The user already has an active session. Use log out endpoint before try log in again.",
+        data: [],
+      };
+
+      return res.status(statusCode).json(response);
+    }
+
+    // Checks if the code is in the user request query
+    const code: string | undefined = req.query.code as string;
+    if (!code) {
+      statusCode = 400;
+      response = {
+        code: statusCode,
+        message: "You must send the code provided by Auth2.",
+        data: [],
+      };
+
+      return res.status(statusCode).json(response);
     }
 
     // Contact with OAuth to get client info
-    const code: string | undefined = req.query.code as string;
-    if (!code) {
-      return res.status(400).send("Error, you must send a code.");
-    }
-
     try {
       const { tokens } = await oauth2Client.getToken(code);
       oauth2Client.setCredentials(tokens);
     } catch (err) {
-      return res
-        .status(500)
-        .send(
-          "Error, could not get user info. Check if the code is correct or try again."
-        );
+      statusCode = 500;
+      response = {
+        code: statusCode,
+        message:
+          "Could not retrieve user info. Check the application logs for more information.",
+        data: [],
+      };
+
+      return res.status(statusCode).json(response);
     }
 
     // Creates an object for the response
@@ -140,54 +170,87 @@ export const userController = {
       }
 
       req.session.credentials = credentials; // Saves the full info in a session variable
-      res.sendStatus(statusCode);
+      response = {
+        code: statusCode,
+        message: "Loged in successfully.",
+        data: [],
+      };
+
+      res.status(statusCode).json(response);
     } else {
       statusCode = 500;
-      res
-        .status(statusCode)
-        .json({ error: "Could not retrieve user information" });
+      response = {
+        code: statusCode,
+        message: `Could not retrieve user information.
+        Check application logs to get more information.`,
+        data: [],
+      };
+
+      res.status(statusCode).json(response);
     }
   },
 
-  get_session_info: (req: Request, res: Response) => {
+  get_session_info: (
+    req: Request,
+    res: Response<ApiResponse<UserCredentials | null>>
+  ) => {
     // If there is an active session
-    console.log(req.session);
+    let statusCode: number;
+
     if (req.session.credentials) {
-      return res.status(200).json(req.session.credentials);
+      statusCode = 200;
+
+      let response: ApiResponse<UserCredentials> = {
+        code: statusCode,
+        message: "Session info successfully retrieved.",
+        data: [req.session.credentials],
+      };
+
+      return res.status(statusCode).json(response);
     }
 
-    res.status(401).json({ error: "No active session. Please log in." });
+    statusCode = 401;
+
+    let response: ApiResponse<null> = {
+      code: statusCode,
+      message: "No active session found. Please log in.",
+      data: [],
+    };
+
+    res.status(statusCode).json(response);
   },
 
-  post_logout: (req: Request, res: Response) => {
+  post_logout: (req: Request, res: Response<ApiResponse<null>>) => {
+    let statusCode: number = 200;
+
+    // Attemps to destroy the current user session
     req.session.destroy((err) => {
       if (err) {
-        console.log("Ocurrio un error!");
-        return res.send("Me caigo a pedazos");
-      }
+        console.error(
+          "The following error has ocurred in the logout endpoint: " + err
+        );
 
-      res.clearCookie("connect.sid");
-      res.end();
-    });
-  },
+        statusCode = 500;
+        let response: ApiResponse<null> = {
+          code: statusCode,
+          message: `An unexpected error has ocurred while trying 
+            to destroy the current session. Check the 
+            application logs for more info.`,
+          data: [],
+        };
 
-  test_create_name: (req: Request, res: Response) => {
-    req.session.name = "Pedro";
-    res.status(200).send();
-  },
-
-  test_show_name: (req: Request, res: Response) => {
-    res.status(200).send("The name is " + req.session.name);
-  },
-
-  test_delete_session: (req: Request, res: Response) => {
-    req.session.destroy((err) => {
-      if (err) {
-        console.log("Ocurrio un error!");
-        return res.send("Me caigo a pedazos");
+        return res.status(statusCode).json(response);
       }
       res.clearCookie("connect.sid");
-      res.end();
+
+      statusCode = 200;
+      let response: ApiResponse<null> = {
+        code: statusCode,
+        message: "The session has been successfully destroyed.",
+        data: [],
+      };
+
+      res.status(statusCode).json(response);
     });
   },
 };

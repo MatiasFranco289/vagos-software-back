@@ -69,7 +69,7 @@ export async function preloadUsers() {
     where: { scope: ScopeNames.ADMIN },
   });
 
-  //TODO: Agregar otros usuarios mas aca y sacarlos del .env
+  // TODO: Agregar otros mails de admins aca
   await User.create({
     name: "VagoDev1",
     user_name: "Desh",

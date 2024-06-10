@@ -6,7 +6,6 @@ import { userRoute } from "./routes/User.js";
 import { initDB } from "./database.js";
 
 // TODO: Documentar en README.md
-// TODO: Hacer que los endpoints no exploten a la minima
 // Load .env vars
 dotenv.config();
 
@@ -15,8 +14,7 @@ const app = express();
 const port: string = process.env.PORT || "3000";
 
 // Setup CORS policies
-// TODO: Check if the CORS its working correctly and you can't do request from others domains.
-const whiteList = ["http://localhost:5173"];
+const whiteList = process.env.WHITE_LIST.split(",");
 const corsOptions = {
   origin: (origin, callback) => {
     if (whiteList.indexOf(origin) !== -1 || !origin) {
@@ -39,7 +37,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: false,
-      maxAge: 6000000,
+      maxAge: 72 * 60 * 60 * 1000, // 72 hours
     },
   })
 );

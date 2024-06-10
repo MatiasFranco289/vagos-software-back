@@ -21,8 +21,8 @@ export interface UserInfo {
   picture: string;
 }
 
-export interface ApiResponse {
+export interface ApiResponse<T> {
   code: number;
   message: string;
-  data: [];
+  data: Array<T>;
 }
