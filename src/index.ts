@@ -31,15 +31,15 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Setup for SESSION variables
-// TODO: Make this secure
+// TODO: Make this secure when deploying
 app.use(
   session({
     secret: process.env.CLIENT_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       secure: false,
-      maxAge: 60000,
+      maxAge: 6000000,
     },
   })
 );

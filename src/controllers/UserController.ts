@@ -7,6 +7,8 @@ import { UserStatus } from "../models/UserStatus.js";
 import { UserScopes } from "../models/UserScopes.js";
 import { UserCredentials, ScopeNames, StatusNames } from "../constants.js";
 
+// TODO: Deberias implementar una interfaz unificada para las respuestas
+
 // Load .env vars
 dotenv.config();
 
@@ -138,16 +140,54 @@ export const userController = {
       }
 
       req.session.credentials = credentials; // Saves the full info in a session variable
-      res.status(statusCode).send(req.session.credentials);
-      console.log(req.session.credentials);
+      res.sendStatus(statusCode);
     } else {
       statusCode = 500;
-      res.status(statusCode).send("Could not retrieve user information");
+      res
+        .status(statusCode)
+        .json({ error: "Could not retrieve user information" });
     }
   },
 
-  is_session_active: (req, res) => {
-    const sessionStatus: boolean = req.session.credentials !== undefined;
-    res.send(sessionStatus);
+  get_session_info: (req: Request, res: Response) => {
+    // If there is an active session
+    console.log(req.session);
+    if (req.session.credentials) {
+      return res.status(200).json(req.session.credentials);
+    }
+
+    res.status(401).json({ error: "No active session. Please log in." });
+  },
+
+  post_logout: (req: Request, res: Response) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.log("Ocurrio un error!");
+        return res.send("Me caigo a pedazos");
+      }
+
+      res.clearCookie("connect.sid");
+      res.end();
+    });
+  },
+
+  test_create_name: (req: Request, res: Response) => {
+    req.session.name = "Pedro";
+    res.status(200).send();
+  },
+
+  test_show_name: (req: Request, res: Response) => {
+    res.status(200).send("The name is " + req.session.name);
+  },
+
+  test_delete_session: (req: Request, res: Response) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.log("Ocurrio un error!");
+        return res.send("Me caigo a pedazos");
+      }
+      res.clearCookie("connect.sid");
+      res.end();
+    });
   },
 };

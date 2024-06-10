@@ -20,3 +20,9 @@ export interface UserInfo {
   username: string;
   picture: string;
 }
+
+export interface ApiResponse {
+  code: number;
+  message: string;
+  data: [];
+}
