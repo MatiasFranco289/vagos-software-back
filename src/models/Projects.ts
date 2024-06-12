@@ -7,10 +7,12 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
+  BelongsToMany,
 } from "sequelize-typescript";
 import { Tags } from "./Tags.js";
 import { ProjectStatus } from "./ProjectStatus.js";
 import { User } from "./Users.js";
+import { ProjectsTags } from "./ProjectsTags.js";
 
 @Table({
   tableName: "projects",
@@ -37,13 +39,6 @@ export class Projects extends Model<Projects> {
   @Column({ type: DataType.STRING, allowNull: false })
   public description: string;
 
-  @ForeignKey(() => Tags)
-  @Column
-  public tag_id: number;
-
-  @BelongsTo(() => Tags)
-  public Tags?: Tags;
-
   @ForeignKey(() => ProjectStatus)
   @Column
   public project_status_id: number;
@@ -57,15 +52,9 @@ export class Projects extends Model<Projects> {
 
   @BelongsTo(() => User)
   public User: User;
+
+  @BelongsToMany(() => Tags, {
+    through: () => ProjectsTags,
+  })
+  public Tags?: Tags[];
 }
-
-// creado por -- >
-
-// Imagenes
-// Videos
-
-//-------------------------BLOGS-------------------------------------
-// Los blogs van a estar escritors en markdown asi que el modelo de un post seria algo como
-
-// id
-// texto: Markdown

@@ -6,6 +6,7 @@ import { UserScopes, preloadUserScopes } from "./models/UserScopes.js";
 import { Tags } from "./models/Tags.js";
 import { Projects } from "./models/Projects.js";
 import { ProjectStatus } from "./models/ProjectStatus.js";
+import { ProjectsTags } from "./models/ProjectsTags.js";
 
 dotenv.config();
 
@@ -16,7 +17,15 @@ export const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     dialect: "postgres",
-    models: [User, UserStatus, UserScopes, Projects, Tags, ProjectStatus],
+    models: [
+      User,
+      UserStatus,
+      UserScopes,
+      Projects,
+      ProjectStatus,
+      Tags,
+      ProjectsTags,
+    ],
   }
 );
 
@@ -24,7 +33,7 @@ export async function initDB() {
   try {
     await sequelize.authenticate();
     console.log("Database is online");
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: true, alter: true });
     console.log("Database is synchronized");
 
     User.belongsTo(UserStatus, { foreignKey: "user_status_id" });
@@ -33,14 +42,21 @@ export async function initDB() {
     User.belongsTo(UserScopes, { foreignKey: "user_scope_id" });
     UserScopes.hasMany(User, { foreignKey: "user_scope_id" });
 
-    Projects.belongsTo(Tags, { foreignKey: "tag_id" });
-    Tags.hasMany(Projects, { foreignKey: "tag_id" });
-
     Projects.belongsTo(ProjectStatus, { foreignKey: "project_status_id" });
     ProjectStatus.hasMany(Projects, { foreignKey: "project_status_id" });
 
     Projects.belongsTo(User, { foreignKey: "created_by" });
     User.hasMany(Projects, { foreignKey: "created_by" });
+
+    Projects.belongsToMany(Tags, {
+      through: ProjectsTags,
+      foreignKey: "project_id",
+    });
+
+    Tags.belongsToMany(Projects, {
+      through: ProjectsTags,
+      foreignKey: "tag_id",
+    });
 
     await preloadUserScopes();
     await preloadUserStatus();

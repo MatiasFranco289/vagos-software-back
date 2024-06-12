@@ -4,7 +4,9 @@ import cors from "cors";
 import session from "express-session";
 import { userRoute } from "./routes/User.js";
 import { initDB } from "./database.js";
+import { projectRoute } from "./routes/Projects.js";
 
+// TODO: Cambiar el formato de los errores al usado en el helper
 // TODO: Documentar en README.md
 // Load .env vars
 dotenv.config();
@@ -47,6 +49,7 @@ initDB();
 
 // Adding routes
 app.use("/users", userRoute);
+app.use("/projects", projectRoute);
 
 // Init the app
 app.listen(port, () => {
