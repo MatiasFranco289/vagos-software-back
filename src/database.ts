@@ -1,12 +1,12 @@
 import { Sequelize } from "sequelize-typescript";
 import dotenv from "dotenv";
-import { User, preloadUsers } from "./models/Users.js";
-import { UserStatus, preloadUserStatus } from "./models/UserStatus.js";
-import { UserScopes, preloadUserScopes } from "./models/UserScopes.js";
-import { Tags } from "./models/Tags.js";
-import { Projects } from "./models/Projects.js";
-import { ProjectStatus } from "./models/ProjectStatus.js";
-import { ProjectsTags } from "./models/ProjectsTags.js";
+import { User, preloadUsers } from "./models/Users.ts";
+import { UserStatus, preloadUserStatus } from "./models/UserStatus.ts";
+import { UserScopes, preloadUserScopes } from "./models/UserScopes.ts";
+import { Tags } from "./models/Tags.ts";
+import { Projects } from "./models/Projects.ts";
+import { ProjectStatus } from "./models/ProjectStatus.ts";
+import { ProjectsTags } from "./models/ProjectsTags.ts";
 
 dotenv.config();
 

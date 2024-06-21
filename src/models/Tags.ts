@@ -7,8 +7,8 @@ import {
   Model,
   BelongsToMany,
 } from "sequelize-typescript";
-import { Projects } from "./Projects.js";
-import { ProjectsTags } from "./ProjectsTags.js";
+import { Projects } from "./Projects.ts";
+import { ProjectsTags } from "./ProjectsTags.ts";
 
 @Table({
   tableName: "tags",

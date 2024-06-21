@@ -2,9 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
-import { userRoute } from "./routes/User.js";
-import { initDB } from "./database.js";
-import { projectRoute } from "./routes/Projects.js";
+import { userRoute } from "./routes/User.ts";
+import { initDB } from "./database.ts";
+import { projectRoute } from "./routes/Projects.ts";
 
 // TODO: Cambiar el formato de los errores al usado en el helper
 // TODO: Documentar en README.md

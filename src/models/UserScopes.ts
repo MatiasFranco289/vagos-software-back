@@ -7,7 +7,7 @@ import {
   PrimaryKey,
   AutoIncrement,
 } from "sequelize-typescript";
-import { ScopeNames } from "../constants.js";
+import { ScopeNames } from "../constants.ts";
 
 @Table({
   tableName: "user_scopes",

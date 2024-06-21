@@ -2,15 +2,15 @@ import { Request, Response } from "express";
 import { google } from "googleapis";
 import dotenv from "dotenv";
 import jwt, { Jwt, JwtPayload } from "jsonwebtoken";
-import { User } from "../models/Users.js";
-import { UserStatus } from "../models/UserStatus.js";
-import { UserScopes } from "../models/UserScopes.js";
+import { User } from "../models/Users.ts";
+import { UserStatus } from "../models/UserStatus.ts";
+import { UserScopes } from "../models/UserScopes.ts";
 import {
   UserCredentials,
   ScopeNames,
   StatusNames,
   ApiResponse,
-} from "../constants.js";
+} from "../constants.ts";
 
 // Load .env vars
 dotenv.config();

@@ -8,8 +8,8 @@ import {
   PrimaryKey,
   AutoIncrement,
 } from "sequelize-typescript";
-import { StatusNames } from "../constants.js";
-import { User } from "./Users.js";
+import { StatusNames } from "../constants.ts";
+import { User } from "./Users.ts";
 
 @Table({
   tableName: "user_status",

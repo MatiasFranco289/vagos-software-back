@@ -9,10 +9,10 @@ import {
   BelongsTo,
   BelongsToMany,
 } from "sequelize-typescript";
-import { Tags } from "./Tags.js";
-import { ProjectStatus } from "./ProjectStatus.js";
-import { User } from "./Users.js";
-import { ProjectsTags } from "./ProjectsTags.js";
+import { Tags } from "./Tags.ts";
+import { ProjectStatus } from "./ProjectStatus.ts";
+import { User } from "./Users.ts";
+import { ProjectsTags } from "./ProjectsTags.ts";
 
 @Table({
   tableName: "projects",

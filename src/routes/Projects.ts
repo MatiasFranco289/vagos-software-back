@@ -1,6 +1,6 @@
 import express from "express";
-import { projectController } from "../controllers/ProjectController.js";
-import { validateCreate } from "../validators/Projects.js";
+import { projectController } from "../controllers/ProjectController.ts";
+import { validateCreate } from "../validators/Projects.ts";
 
 export const projectRoute = express.Router();
 

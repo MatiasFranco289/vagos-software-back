@@ -1,8 +1,8 @@
 // TODO: Deberia ser capaz de crear un proyecto
 // TODO: Deberia ser capaz de obtener todos los proyectos
 import { Request, Response } from "express";
-import { ApiResponse } from "../constants.js";
-import { Projects } from "../models/Projects.js";
+import { ApiResponse } from "../constants.ts";
+import { Projects } from "../models/Projects.ts";
 
 export const projectController = {
   get: (req: Request, res: Response<ApiResponse<null>>) => {

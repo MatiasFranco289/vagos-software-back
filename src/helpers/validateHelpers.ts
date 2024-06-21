@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
 import { Request, Response, Next } from "express";
-import { ApiResponse } from "../constants.js";
+import { ApiResponse } from "../constants.ts";
 
 export const validateResult = (req: Request, res: Response, next: Next) => {
   try {

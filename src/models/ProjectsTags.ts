@@ -7,8 +7,8 @@ import {
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
-import { Projects } from "./Projects.js";
-import { Tags } from "./Tags.js";
+import { Projects } from "./Projects.ts";
+import { Tags } from "./Tags.ts";
 
 @Table({
   tableName: "projects_tags",
