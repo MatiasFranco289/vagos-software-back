@@ -8,6 +8,7 @@ export const validateResult = (req: Request, res: Response, next: Next) => {
     return next();
   } catch (err) {
     let statusCode: number = 403;
+
     let response: ApiResponse<null> = {
       code: 403,
       message: "Bad request, some parameters are not correct.",

@@ -5,6 +5,7 @@ import session from "express-session";
 import { userRoute } from "./routes/User.ts";
 import { initDB } from "./database.ts";
 import { projectRoute } from "./routes/Projects.ts";
+import { projectStatusRoute } from "./routes/ProjectsStatus.ts";
 
 // TODO: Cambiar el formato de los errores al usado en el helper
 // TODO: Documentar en README.md
@@ -14,6 +15,8 @@ dotenv.config();
 // Setup app and port
 const app = express();
 const port: string = process.env.PORT || "3000";
+
+app.use(express.json());
 
 // Setup CORS policies
 const whiteList = process.env.WHITE_LIST.split(",");
@@ -50,6 +53,7 @@ initDB();
 // Adding routes
 app.use("/users", userRoute);
 app.use("/projects", projectRoute);
+app.use("/projects-status", projectStatusRoute);
 
 // Init the app
 app.listen(port, () => {

@@ -33,7 +33,7 @@ export async function initDB() {
   try {
     await sequelize.authenticate();
     console.log("Database is online");
-    await sequelize.sync({ force: true, alter: true });
+    await sequelize.sync({ force: false, alter: true });
     console.log("Database is synchronized");
 
     User.belongsTo(UserStatus, { foreignKey: "user_status_id" });

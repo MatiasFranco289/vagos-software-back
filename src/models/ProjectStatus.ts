@@ -17,6 +17,6 @@ export class ProjectStatus extends Model<ProjectStatus> {
   @Column({ type: DataType.INTEGER })
   public project_status_id: number;
 
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: false, unique: true })
   public status_name: string;
 }
