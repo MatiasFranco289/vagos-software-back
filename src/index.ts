@@ -2,9 +2,13 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
-import { userRoute } from "./routes/User.js";
-import { initDB } from "./database.js";
+import { userRoute } from "./routes/User.ts";
+import { initDB } from "./database.ts";
+import { projectRoute } from "./routes/Projects.ts";
+import { projectStatusRoute } from "./routes/ProjectsStatus.ts";
+import { tagsRoute } from "./routes/Tags.ts";
 
+// TODO: Cambiar el formato de los errores al usado en el helper
 // TODO: Documentar en README.md
 // Load .env vars
 dotenv.config();
@@ -12,6 +16,8 @@ dotenv.config();
 // Setup app and port
 const app = express();
 const port: string = process.env.PORT || "3000";
+
+app.use(express.json());
 
 // Setup CORS policies
 const whiteList = process.env.WHITE_LIST.split(",");
@@ -47,6 +53,9 @@ initDB();
 
 // Adding routes
 app.use("/users", userRoute);
+app.use("/projects", projectRoute);
+app.use("/projects-status", projectStatusRoute);
+app.use("/tags", tagsRoute);
 
 // Init the app
 app.listen(port, () => {

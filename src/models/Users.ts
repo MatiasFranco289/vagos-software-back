@@ -8,9 +8,9 @@ import {
   PrimaryKey,
   AutoIncrement,
 } from "sequelize-typescript";
-import { UserStatus } from "./UserStatus.js";
-import { UserScopes } from "./UserScopes.js";
-import { StatusNames, ScopeNames } from "../constants.js";
+import { UserStatus } from "./UserStatus.ts";
+import { UserScopes } from "./UserScopes.ts";
+import { StatusNames, ScopeNames } from "../constants.ts";
 
 @Table({
   tableName: "users",
