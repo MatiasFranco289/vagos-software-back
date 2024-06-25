@@ -6,6 +6,7 @@ import { userRoute } from "./routes/User.ts";
 import { initDB } from "./database.ts";
 import { projectRoute } from "./routes/Projects.ts";
 import { projectStatusRoute } from "./routes/ProjectsStatus.ts";
+import { tagsRoute } from "./routes/Tags.ts";
 
 // TODO: Cambiar el formato de los errores al usado en el helper
 // TODO: Documentar en README.md
@@ -54,6 +55,7 @@ initDB();
 app.use("/users", userRoute);
 app.use("/projects", projectRoute);
 app.use("/projects-status", projectStatusRoute);
+app.use("/tags", tagsRoute);
 
 // Init the app
 app.listen(port, () => {

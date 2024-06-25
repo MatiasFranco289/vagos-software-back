@@ -1,8 +1,8 @@
-// TODO: Deberia ser capaz de crear un proyecto
-// TODO: Deberia ser capaz de obtener todos los proyectos
 import { Request, Response } from "express";
 import { ApiResponse } from "../constants.ts";
 import { Projects } from "../models/Projects.ts";
+import { ProjectStatus } from "../models/ProjectStatus.ts";
+import { Tags } from "../models/Tags.ts";
 
 export const projectController = {
   get: (req: Request, res: Response<ApiResponse<null>>) => {
@@ -50,7 +50,12 @@ export const projectController = {
     let response: ApiResponse<Projects | null>;
 
     try {
-      const projects = await Projects.findAll();
+      const projects = await Projects.findAll({
+        include: [
+          { model: ProjectStatus, as: "project_status" },
+          { model: Tags, as: "tags" },
+        ],
+      });
 
       response = {
         code: statusCode,
@@ -92,7 +97,7 @@ export const projectController = {
       tags,
     } = req.body;
     let statusCode = 200;
-    let response: ApiResponse<null | Projects>;
+    let response: ApiResponse<null>;
 
     const project = await Projects.findByPk(project_id);
 
@@ -116,9 +121,15 @@ export const projectController = {
       project.project_status_id =
         project_status_id || project.dataValues.project_status_id;
       project.created_by = user_id || project.dataValues.created_by;
-      project.Tags = tags || project.dataValues.Tags;
+      //project.addTags(tags);
 
       await project.save();
+
+      response = {
+        code: statusCode,
+        message: "Successfully updated.",
+        data: [],
+      };
     } catch (err) {
       console.error(`The following error has ocurred while trying to update the
         project with id ${project.dataValues.project_id}: ${err}`);

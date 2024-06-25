@@ -42,7 +42,11 @@ export async function initDB() {
     User.belongsTo(UserScopes, { foreignKey: "user_scope_id" });
     UserScopes.hasMany(User, { foreignKey: "user_scope_id" });
 
-    Projects.belongsTo(ProjectStatus, { foreignKey: "project_status_id" });
+    Projects.belongsTo(ProjectStatus, {
+      foreignKey: "project_status_id",
+      as: "project_status",
+    });
+
     ProjectStatus.hasMany(Projects, { foreignKey: "project_status_id" });
 
     Projects.belongsTo(User, { foreignKey: "created_by" });
@@ -51,6 +55,7 @@ export async function initDB() {
     Projects.belongsToMany(Tags, {
       through: ProjectsTags,
       foreignKey: "project_id",
+      as: "tags",
     });
 
     Tags.belongsToMany(Projects, {

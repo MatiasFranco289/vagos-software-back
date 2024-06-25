@@ -18,7 +18,7 @@ export const projectStatusController = {
     req: Request,
     res: Response<ApiResponse<ProjectStatus | null>>
   ) => {
-    let statusCode = 200;
+    let statusCode = 201;
     let response: ApiResponse<ProjectStatus | null>;
     const { status_name } = req.body;
 

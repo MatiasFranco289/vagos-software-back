@@ -13,6 +13,12 @@ import { Tags } from "./Tags.ts";
 import { ProjectStatus } from "./ProjectStatus.ts";
 import { User } from "./Users.ts";
 import { ProjectsTags } from "./ProjectsTags.ts";
+import {
+  DataTypes,
+  BelongsToManyGetAssociationsMixin,
+  BelongsToManyAddAssociationsMixin,
+  BelongsToManyRemoveAssociationsMixin,
+} from "sequelize";
 
 @Table({
   tableName: "projects",
@@ -57,4 +63,5 @@ export class Projects extends Model<Projects> {
     through: () => ProjectsTags,
   })
   public Tags?: Tags[];
+  addTags: BelongsToManyAddAssociationsMixin<Tags, number>;
 }
